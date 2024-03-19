@@ -1,48 +1,11 @@
-const fs = require("fs");
-
-const readline = require("readline");
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
-
-const path = "./data";
-if (!fs.existsSync(path)) {
-  fs.mkdirSync(path);
-}
-
-const data = "./data/contact.json";
-if (!fs.existsSync(data)) {
-  fs.writeFileSync(data, "[]", "utf-8");
-}
-
-const pertanyaan1 = () => {
-  return new Promise((res, rej) => {
-    rl.question("Masukkan nama anda : ", (nama) => {
-      res(nama);
-    });
-  });
-};
-
-const pertanyaan2 = () => {
-  return new Promise((res, rej) => {
-    rl.question("Masukkan email anda : ", (email) => {
-      res(email);
-    });
-  });
-};
+const contact = require("./contacts");
 
 const main = async () => {
-  const nama = await pertanyaan1();
-  const email = await pertanyaan2();
-  const contact = { nama, email };
-  const file = fs.readFileSync("data/contact.json", "utf-8");
-  const contacts = JSON.parse(file);
+  const nama = await contact.pertanyaan("Masukkan nama anda : ");
+  const email = await contact.pertanyaan("Masukkan email anda : ");
+  const nohp = await contact.pertanyaan("Masukkan no HP anda : ");
 
-  contacts.push(contact);
-  fs.writeFileSync("data/contact.json", JSON.stringify(contacts));
-  console.log(`Terimakasih ${nama} sudah memasukkan data`);
-  rl.close();
+  contact.simpancontact(nama, email, nohp);
 };
 
 main();
